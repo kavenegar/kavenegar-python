@@ -30,7 +30,7 @@ except APIException,e:
 except HTTPException,e: 
 	print str(e)
 
-/*
+'''
 sample output
 {
     "return":
@@ -62,5 +62,5 @@ sample output
         }
     ]
 }
-*/
+'''
 ```
