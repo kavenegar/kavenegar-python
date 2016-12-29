@@ -1,4 +1,4 @@
-# kavenegar-php
+# kavenegar-python
 
 Installation
 -----
