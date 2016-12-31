@@ -16,7 +16,7 @@ Anyway there is good tutorial about <a href="http://gun.io/blog/how-to-github-fo
 ## Usage
 
 Well, There is an example to Send SMS by Python below.
------
+
 ```python
 #!/usr/bin/env python
 from kavenegar import *
