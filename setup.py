@@ -6,7 +6,7 @@ if sys.version_info < (2, 6):
     requires.append('simplejson')
 
 setup(
-    name = "plivo",
+    name = "kavenegar",
     py_modules = ['kavenegar'],
     version = "1.0.0",
     description = "Kavenegar Python library",
