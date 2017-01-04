@@ -23,7 +23,5 @@ setup(
         "Development Status :: 5 - Production/Stable",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Communications :: Telephony"
-        ],
-    long_description = """\
-        Kavenegar Python library
-    """ )
+        ]
+     )
