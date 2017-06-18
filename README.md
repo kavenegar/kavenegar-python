@@ -5,7 +5,7 @@ If you need to future information about API document Please visit RESTful Docume
 
 ## Installation
 <p> You can install our SDK from pypi though below command </p>
-```python
+```
 pip install kavenegar
 
 ```
