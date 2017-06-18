@@ -4,7 +4,7 @@
 If you need to future information about API document Please visit RESTful Document
 
 ## Installation
-<p> You can install our SDK from pypi though below command </p>
+<p> You can install our SDK from pypi through below command </p>
 
 
 ```
