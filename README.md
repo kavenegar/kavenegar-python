@@ -5,10 +5,10 @@ If you need to future information about API document Please visit RESTful Docume
 
 ## Installation
 <p> You can install our SDK from pypi though below command </p>
-`
+```python
 pip install kavenegar
 
-`
+```
 You can download the Python SDK <a href="https://github.com/KaveNegar/kavenegar-python/blob/master/kavenegar.py">Here</a> too
 <p>
 Then ,You need to make an account on Kavenegar from <a href="https://panel.kavenegar.com/Client/Membership/Register">Here</a>
