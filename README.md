@@ -24,56 +24,59 @@ Anyway there is good tutorial about <a href="http://gun.io/blog/how-to-github-fo
 
 Well, There is an example to Send SMS by Python below.
 
+### Send
 ```python
-#!/usr/bin/env python
 from kavenegar import *
 try:
-    import json
-except ImportError:
-    import simplejson as json
-	
-try:
-	api = KavenegarAPI('{Your APIKey}')
-	params = {
-		'sender': '10004346',
-		'receptor': '09367891011,09367891012',
-		'message': 'خدمات پیام کوتاه کاوه نگار'
-	}   
-	response = api.sms_send(params)
-	print(response)
-except APIException as e: 
-	print(e)
-except HTTPException as e: 
-	print(e)
-```
-
-There is an example to Send OTP.
-
-```python
-#!/usr/bin/env python
-from kavenegar import *
-try:
-    import json
-except ImportError:
-    import simplejson as json	
-try:
-    api = KavenegarAPI('')
+    api = KavenegarAPI('Your APIKey')
     params = {
-	'receptor': '09367891011',
-	'template': 'test',
-	'token': '123',
-	'token2': '',
-	'token3': '',
-	'token10': '',
-	'type': 'sms',#sms or call
-    }   
-    response = api.verify_lookup(params)
+        'sender': '',#optinal
+        'receptor': '',#multiple mobile number, split by comma
+        'message': '',
+    } 
+    response = api.sms_send(params)
     print(response)
 except APIException as e: 
     print(e)
 except HTTPException as e: 
     print(e)
-
+```
+### OTP
+```python
+#!/usr/bin/env python
+from kavenegar import *
+try:
+    api = KavenegarAPI('Your APIKey')
+    params = {
+        'receptor': '',
+        'template': '',
+        'token': '',
+        'type': 'sms',#sms vs call
+    }   
+  response = api.verify_lookup(params)
+  print(response)
+except APIException as e: 
+  print(e)
+except HTTPException as e: 
+  print(e)
+```
+### Send Bulk
+```python
+#!/usr/bin/env python
+from kavenegar import *
+try:
+    api = KavenegarAPI('Your APIKey')
+    params = {
+        'sender':'["",""]',#array of string as json 
+        'receptor': '["",""]',#array of string as json 
+        'message': '["",""]',#array of string as json 
+    } 
+    response = api.sms_sendarray(params)
+    print(response)
+except APIException as e: 
+    print(e)
+except HTTPException as e: 
+    print(e)
 ```
 
 # Contribution
