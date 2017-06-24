@@ -80,6 +80,12 @@ class KavenegarAPI(object):
     def verify_lookup(self, params=None):
         return self._request('verify', 'lookup',params)
     
+    def call_maketts(self, params=None):
+        return self._request('call', 'maketts',params)   
+		
+	def call_status(self, params=None):
+        return self._request('call', 'status',params)   
+    
     def account_info(self):
         return self._request('account', 'info')
     
