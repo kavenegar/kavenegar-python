@@ -1,0 +1,5 @@
+.vs
+nuget
+pip.txt
+dist
+kavenegar.egg-info
