@@ -22,6 +22,12 @@ class KavenegarAPI(object):
 	    'charset': 'utf-8'
             }
         
+    def __repr__(self):
+        return "kavenegar.KavenegarAPI({!r})".format(self.apikey)
+
+    def __str__(self):
+        return "kavenegar.KavenegarAPI({!s})".format(self.apikey)
+
     def _request(self, action, method, params={}):
         url = 'http://' + self.host + '/' + self.version + '/' + self.apikey + '/' + action + '/' + method + '.json'
         try:
