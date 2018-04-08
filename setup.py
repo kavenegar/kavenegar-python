@@ -8,7 +8,7 @@ if sys.version_info < (2, 6):
 setup(
     name = "kavenegar",
     py_modules = ['kavenegar'],
-    version = "1.1.0",
+    version = "1.1.1",
     description = "Kavenegar Python library",
     author = "Kavenegar Team",
     author_email = "support@kavenegar.com",
@@ -22,6 +22,6 @@ setup(
         "Intended Audience :: Developers",
         "Development Status :: 5 - Production/Stable",
         "Topic :: Software Development :: Libraries :: Python Modules",
-        "Topic :: Communications :: Telephony"
+        "Topic :: Communications :: Telephony",
         ]
      )
