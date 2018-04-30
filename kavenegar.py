@@ -29,7 +29,7 @@ class KavenegarAPI(object):
         return "kavenegar.KavenegarAPI({!s})".format(self.apikey)
 
     def _request(self, action, method, params={}):
-        url = 'http://' + self.host + '/' + self.version + '/' + self.apikey + '/' + action + '/' + method + '.json'
+        url = 'https://' + self.host + '/' + self.version + '/' + self.apikey + '/' + action + '/' + method + '.json'
         try:
             content = requests.post(url , headers=self.headers,auth=None,data=params).content
             try:
