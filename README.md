@@ -22,13 +22,13 @@ Anyway there is good tutorial about <a href="http://gun.io/blog/how-to-github-fo
 
 ## Usage
 
-Well, There is an example to Send SMS by Python below.
+Well, There is an example to Send SMS by Python below. `timeout` parameter is optional in `KavenegarAPI` constructor, default value is set to 10 seconds.
 
 ### Send
 ```python
 from kavenegar import *
 try:
-    api = KavenegarAPI('Your APIKey')
+    api = KavenegarAPI('Your APIKey', timeout=20)
     params = {
         'sender': '',#optional
         'receptor': '',#multiple mobile number, split by comma
@@ -46,7 +46,7 @@ except HTTPException as e:
 #!/usr/bin/env python
 from kavenegar import *
 try:
-    api = KavenegarAPI('Your APIKey')
+    api = KavenegarAPI('Your APIKey', timeout=20)
     params = {
         'receptor': '',
         'template': '',
@@ -65,7 +65,7 @@ except HTTPException as e:
 #!/usr/bin/env python
 from kavenegar import *
 try:
-    api = KavenegarAPI('Your APIKey')
+    api = KavenegarAPI('Your APIKey', timeout=20)
     params = {
         'sender':'["",""]',#array of string as json 
         'receptor': '["",""]',#array of string as json 
