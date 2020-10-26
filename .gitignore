@@ -105,3 +105,6 @@ venv.bak/
 
 # my ignores
 .pypirc
+
+# pycharm ignores
+.idea
