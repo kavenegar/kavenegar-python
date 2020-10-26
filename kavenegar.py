@@ -1,105 +1,105 @@
 import requests
+import json
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
+from exceptions import HTTPException, APIException
 
 
-# Default requests timeout in seconds.
-DEFAULT_TIMEOUT = 10
+class KavenegarAPI:
+    def __init__(self, apikey: str, timeout: int = 10):
+        """
+        Default time out is 10 second.
+        Host: api.kavenegar.com
+        :param apikey:
+        :param timeout:
+        """
+        self._version = 'v1'
+        self._host = 'api.kavenegar.com'
+        self._apikey = apikey
+        self._timeout = timeout
+        self._headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'charset': 'utf-8'
+        }
 
-
-class APIException(Exception):
-    pass
-
-class HTTPException(Exception):
-    pass
-
-class KavenegarAPI(object):
-    def __init__(self, apikey, timeout=None):
-        self.version = 'v1'
-        self.host = 'api.kavenegar.com'
-        self.apikey = apikey
-        self.timeout = timeout or DEFAULT_TIMEOUT
-        self.headers = {
-	    'Accept': 'application/json',
-	    'Content-Type': 'application/x-www-form-urlencoded',
-	    'charset': 'utf-8'
-            }
-        
     def __repr__(self):
-        return "kavenegar.KavenegarAPI({!r})".format(self.apikey)
+        return f"kavenegar.KavenegarAPI({self._apikey})"
 
     def __str__(self):
-        return "kavenegar.KavenegarAPI({!s})".format(self.apikey)
+        return f"kavenegar.KavenegarAPI({self._apikey})"
 
-    def _request(self, action, method, params={}):
-        url = 'https://' + self.host + '/' + self.version + '/' + self.apikey + '/' + action + '/' + method + '.json'
+    def _request(self, action, method, params=None):
+
+        if not params:
+            params = dict()
+
+        url = f"https://{self._host}/{self._version}/{self._apikey}/{action}/{method}.json"
+
         try:
-            content = requests.post(url , headers=self.headers,auth=None,data=params, timeout=self.timeout).content
+            content = requests.post(url, headers=self._headers, auth=None, data=params, timeout=self._timeout).content
             try:
                 response = json.loads(content.decode("utf-8"))
-                if (response['return']['status']==200):
-                    response=response['entries']
+                if response['return']['status'] == 200:
+                    response = response['entries']
                 else:
-                    raise APIException((u'APIException[%s] %s' % (response['return']['status'],response['return']['message'])).encode('utf-8'))
+                    raise APIException(
+                        (u'APIException[%s] %s' % (response['return']['status'], response['return']['message'])))
             except ValueError as e:
                 raise HTTPException(e)
-            return (response)
+            return response
         except requests.exceptions.RequestException as e:
             raise HTTPException(e)
-        
+
     def sms_send(self, params=None):
-        return self._request('sms', 'send',params)
-    
+        return self._request('sms', 'send', params)
+
     def sms_sendarray(self, params=None):
-        return self._request('sms', 'sendarray',params)
-    
+        return self._request('sms', 'sendarray', params)
+
     def sms_status(self, params=None):
-        return self._request('sms', 'status',params)
-    
+        return self._request('sms', 'status', params)
+
     def sms_statuslocalmessageid(self, params=None):
-        return self._request('sms', 'statuslocalmessageid',params)
-    
+        return self._request('sms', 'statuslocalmessageid', params)
+
     def sms_select(self, params=None):
-        return self._request('sms', 'select',params)
-    
+        return self._request('sms', 'select', params)
+
     def sms_selectoutbox(self, params=None):
-        return self._request('sms', 'selectoutbox',params)
-    
+        return self._request('sms', 'selectoutbox', params)
+
     def sms_latestoutbox(self, params=None):
-        return self._request('sms', 'latestoutbox',params)
-    
+        return self._request('sms', 'latestoutbox', params)
+
     def sms_countoutbox(self, params=None):
-        return self._request('sms', 'countoutbox',params)
-    
+        return self._request('sms', 'countoutbox', params)
+
     def sms_cancel(self, params=None):
-        return self._request('sms', 'cancel',params)
-    
+        return self._request('sms', 'cancel', params)
+
     def sms_receive(self, params=None):
-        return self._request('sms', 'receive',params)
-    
+        return self._request('sms', 'receive', params)
+
     def sms_countinbox(self, params=None):
-        return self._request('sms', 'countinbox',params)
-    
+        return self._request('sms', 'countinbox', params)
+
     def sms_countpostalcode(self, params=None):
-        return self._request('sms', 'countpostalcode',params)
-    
+        return self._request('sms', 'countpostalcode', params)
+
     def sms_sendbypostalcode(self, params=None):
-        return self._request('sms', 'sendbypostalcode',params)
-    
+        return self._request('sms', 'sendbypostalcode', params)
+
     def verify_lookup(self, params=None):
-        return self._request('verify', 'lookup',params)
-    
+        return self._request('verify', 'lookup', params)
+
     def call_maketts(self, params=None):
-        return self._request('call', 'maketts',params)   
-		
+        return self._request('call', 'maketts', params)
+
     def call_status(self, params=None):
-        return self._request('call', 'status',params)   
-    
+        return self._request('call', 'status', params)
+
     def account_info(self):
         return self._request('account', 'info')
-    
-    def account_config(self ,params=None):
-        return self._request('account', 'config',params)   
+
+    def account_config(self, params=None):
+        return self._request('account', 'config', params)
