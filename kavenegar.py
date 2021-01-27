@@ -43,7 +43,7 @@ class KavenegarAPI(object):
                 if (response['return']['status']==200):
                     response=response['entries']
                 else:
-                    raise APIException((u'APIException[%s] %s' % (response['return']['status'],response['return']['message'])).encode('utf-8'))
+                    raise APIException('APIException[{}] {}'.format(response['return']['status'],response['return']['message']))
             except ValueError as e:
                 raise HTTPException(e)
             return (response)
