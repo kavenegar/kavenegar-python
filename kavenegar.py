@@ -9,8 +9,14 @@ except ImportError:
 DEFAULT_TIMEOUT = 10
 
 
-class APIException(Exception):
+class HTTPException(Exception):
     pass
+
+
+class APIException(Exception):
+    def __init__(self, status_code, message):
+        self.status_code = status_code
+        self.message = message
 
     def __str__(self):
         return f'APIException[{self.status_code}] {self.message}'
@@ -46,7 +52,7 @@ class KavenegarAPI(object):
                 if response['return']['status'] == 200:
                     response = response['entries']
                 else:
-                    raise APIException('APIException[{}] {}'.format(response['return']['status'],response['return']['message']))
+                    raise APIException(response['return']['status'], response['return']['message'])
             except ValueError as e:
                 raise HTTPException(e)
             return response
