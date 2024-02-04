@@ -13,8 +13,10 @@ DEFAULT_TIMEOUT = 10
 class APIException(Exception):
     pass
 
+
 class HTTPException(Exception):
     pass
+
 
 class KavenegarAPI(object):
     """
@@ -42,7 +44,7 @@ class KavenegarAPI(object):
         self.apikey_mask = f"{apikey[:2]}********{apikey[-2:]}"
         self.timeout = timeout or DEFAULT_TIMEOUT
         self.proxies = proxies
-        
+
     def __repr__(self):
         return "kavenegar.KavenegarAPI({!r})".format(self.apikey_mask)
 
@@ -79,69 +81,69 @@ class KavenegarAPI(object):
             params = self._pars_params_to_json(params)
         url = "https://{}/{}/{}/{}/{}.json".format(self.host, self.version, self.apikey, action, method)
         try:
-            content = requests.post(url , headers=self.headers,auth=None,data=params, timeout=self.timeout, proxies=self.proxies, ).content
+            content = requests.post(url, headers=self.headers, auth=None, data=params, timeout=self.timeout, proxies=self.proxies, ).content
             try:
                 response = json.loads(content.decode("utf-8"))
                 if (response['return']['status'] == 200):
                     return response['entries']
                 else:
-                    raise APIException('APIException[{}] {}'.format(response['return']['status'],response['return']['message']))
+                    raise APIException('APIException[{}] {}'.format(response['return']['status'], response['return']['message']))
             except ValueError as e:
                 raise HTTPException(e)
         except requests.exceptions.RequestException as e:
             message = str(e).replace(self.apikey, self.apikey_mask)
             raise HTTPException(message) from None
-        
+
     def sms_send(self, params=None):
-        return self._request('sms', 'send',params)
-    
+        return self._request('sms', 'send', params)
+
     def sms_sendarray(self, params=None):
-        return self._request('sms', 'sendarray',params)
-    
+        return self._request('sms', 'sendarray', params)
+
     def sms_status(self, params=None):
-        return self._request('sms', 'status',params)
-    
+        return self._request('sms', 'status', params)
+
     def sms_statuslocalmessageid(self, params=None):
-        return self._request('sms', 'statuslocalmessageid',params)
-    
+        return self._request('sms', 'statuslocalmessageid', params)
+
     def sms_select(self, params=None):
-        return self._request('sms', 'select',params)
-    
+        return self._request('sms', 'select', params)
+
     def sms_selectoutbox(self, params=None):
-        return self._request('sms', 'selectoutbox',params)
-    
+        return self._request('sms', 'selectoutbox', params)
+
     def sms_latestoutbox(self, params=None):
-        return self._request('sms', 'latestoutbox',params)
-    
+        return self._request('sms', 'latestoutbox', params)
+
     def sms_countoutbox(self, params=None):
-        return self._request('sms', 'countoutbox',params)
-    
+        return self._request('sms', 'countoutbox', params)
+
     def sms_cancel(self, params=None):
-        return self._request('sms', 'cancel',params)
-    
+        return self._request('sms', 'cancel', params)
+
     def sms_receive(self, params=None):
-        return self._request('sms', 'receive',params)
-    
+        return self._request('sms', 'receive', params)
+
     def sms_countinbox(self, params=None):
-        return self._request('sms', 'countinbox',params)
-    
+        return self._request('sms', 'countinbox', params)
+
     def sms_countpostalcode(self, params=None):
-        return self._request('sms', 'countpostalcode',params)
-    
+        return self._request('sms', 'countpostalcode', params)
+
     def sms_sendbypostalcode(self, params=None):
-        return self._request('sms', 'sendbypostalcode',params)
-    
+        return self._request('sms', 'sendbypostalcode', params)
+
     def verify_lookup(self, params=None):
-        return self._request('verify', 'lookup',params)
-    
+        return self._request('verify', 'lookup', params)
+
     def call_maketts(self, params=None):
-        return self._request('call', 'maketts',params)   
-		
+        return self._request('call', 'maketts', params)
+
     def call_status(self, params=None):
-        return self._request('call', 'status',params)   
-    
+        return self._request('call', 'status', params)
+
     def account_info(self):
         return self._request('account', 'info')
-    
-    def account_config(self ,params=None):
-        return self._request('account', 'config',params)   
+
+    def account_config(self, params=None):
+        return self._request('account', 'config', params)
