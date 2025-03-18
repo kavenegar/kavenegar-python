@@ -1,5 +1,6 @@
-import requests
 from typing import Optional, Any, Dict
+
+import httpx
 
 from ..exceptions import APIException, HTTPException
 from .base import KavenegarAPIBase
@@ -13,12 +14,18 @@ class KavenegarAPI(KavenegarAPIBase):
     """
 
     def __init__(
-        self, apikey: str, timeout: Optional[int] = None, proxies: Optional[dict] = None
+        self, apikey: str, timeout: Optional[int] = None, proxy: Optional[httpx._types.ProxyTypes] = None,
     ):
         super().__init__(apikey, timeout)
-        self._session = requests.Session()
-        if proxies:
-            self._session.proxies = proxies
+        self._session = httpx.Client(
+            proxy=proxy, timeout=timeout, headers=self.headers
+        )
+
+    def close(self):
+        """
+        Close the session connection
+        """
+        self._session.close()
 
     def _request(
         self, action: str, method: str, params: Optional[Dict[str, Any]] = None
@@ -31,9 +38,7 @@ class KavenegarAPI(KavenegarAPIBase):
             self.host, self.version, self.apikey, action, method
         )
         try:
-            response = self._session.post(
-                url, headers=self.headers, auth=None, data=params, timeout=self.timeout
-            )
+            response = self._session.post(url, data=params)
             try:
                 response = response.json()
                 if response["return"]["status"] == 200:
@@ -46,7 +51,7 @@ class KavenegarAPI(KavenegarAPIBase):
                     )
             except ValueError as e:
                 raise HTTPException(e)
-        except requests.exceptions.RequestException as e:
+        except httpx.RequestError as e:
             message = str(e).replace(self.apikey, self.apikey_mask)
             raise HTTPException(message) from None
 

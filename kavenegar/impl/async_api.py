@@ -1,7 +1,6 @@
 from typing import Optional, Any, Dict
 
-import aiohttp
-from aiohttp.typedefs import StrOrURL
+import httpx
 
 import json
 
@@ -20,12 +19,11 @@ class AsyncKavenegarAPI(KavenegarAPIBase):
         self,
         apikey: str,
         timeout: Optional[int] = None,
-        proxy: Optional[StrOrURL] = None,
+        proxy: Optional[httpx._types.ProxyTypes] = None,
     ):
         super().__init__(apikey, timeout)
-        self.proxy = proxy
-        self._session = aiohttp.ClientSession(
-            headers=self.headers, timeout=aiohttp.ClientTimeout(self.timeout)
+        self._session = httpx.AsyncClient(
+            headers=self.headers, timeout=self.timeout, proxy=proxy
         )
 
     async def _request(
@@ -39,23 +37,21 @@ class AsyncKavenegarAPI(KavenegarAPIBase):
             self.host, self.version, self.apikey, action, method
         )
         try:
-            async with self._session.post(
-                url, data=params, proxy=self.proxy
-            ) as response:
-                try:
-                    response_data = await response.json()
-                    if response_data["return"]["status"] == 200:
-                        return response_data["entries"]
-                    else:
-                        raise APIException(
-                            "APIException[{}] {}".format(
-                                response_data["return"]["status"],
-                                response_data["return"]["message"],
-                            )
+            response = await self._session.post(url, data=params)
+            try:
+                response_data = response.json()
+                if response_data["return"]["status"] == 200:
+                    return response_data["entries"]
+                else:
+                    raise APIException(
+                        "APIException[{}] {}".format(
+                            response_data["return"]["status"],
+                            response_data["return"]["message"],
                         )
-                except json.JSONDecodeError as e:
-                    raise HTTPException(str(e))
-        except aiohttp.ClientError as e:
+                    )
+            except json.JSONDecodeError as e:
+                raise HTTPException(str(e))
+        except httpx.RequestError as e:
             message = str(e).replace(self.apikey, self.apikey_mask)
             raise HTTPException(message)
 

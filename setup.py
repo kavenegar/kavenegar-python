@@ -1,10 +1,10 @@
 from setuptools import setup
 
-requires = ["requests>=2.32.3", "aiohttp>=3.10.10"]
+requires = ["https>=0.28"]
 
 setup(
     name="kavenegar",
-    python_requires=">=3.9",
+    python_requires=">=3.8",
     py_modules=["kavenegar"],
     version="1.2.0",
     description="Kavenegar Python library",
