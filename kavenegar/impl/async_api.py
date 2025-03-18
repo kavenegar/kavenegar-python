@@ -3,10 +3,7 @@ from typing import Optional, Any, Dict
 import aiohttp
 from aiohttp.typedefs import StrOrURL
 
-try:
-    import json
-except ImportError:
-    import simplejson as json  # type: ignore
+import json
 
 from ..exceptions import APIException, HTTPException
 from .base import KavenegarAPIBase

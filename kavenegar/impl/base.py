@@ -1,9 +1,6 @@
 from typing import Optional, Any
 
-try:
-    import json
-except ImportError:
-    import simplejson as json  # type: ignore
+import json
 
 from ..defaults import DEFAULT_TIMEOUT
 

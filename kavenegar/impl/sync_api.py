@@ -1,11 +1,6 @@
 import requests
 from typing import Optional, Any, Dict
 
-try:
-    import json
-except ImportError:
-    import simplejson as json  # type: ignore
-
 from ..exceptions import APIException, HTTPException
 from .base import KavenegarAPIBase
 
@@ -36,11 +31,11 @@ class KavenegarAPI(KavenegarAPIBase):
             self.host, self.version, self.apikey, action, method
         )
         try:
-            content = self._session.post(
+            response = self._session.post(
                 url, headers=self.headers, auth=None, data=params, timeout=self.timeout
-            ).content
+            )
             try:
-                response = json.loads(content.decode("utf-8"))
+                response = response.json()
                 if response["return"]["status"] == 200:
                     return response["entries"]
                 else:
