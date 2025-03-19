@@ -5,7 +5,7 @@ requires = ["httpx>=0.28"]
 setup(
     name="kavenegar",
     python_requires=">=3.8",
-    py_modules=["kavenegar"],
+    packages=["kavenegar", "kavenegar/impl"],
     version="1.2.0",
     description="Kavenegar Python library",
     author="Kavenegar Team",
