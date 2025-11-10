@@ -162,3 +162,12 @@ class KavenegarAPI(object):
 
     def account_config(self, params=None):
         return self._request('account', 'config', params)
+
+    def status_by_receptor(self, params=None):
+        return self._request('sms', 'statusbyreceptor', params)
+
+    def status_by_receptor(self, params=None):
+        return self._request('sms', 'inboxpaged', params)
+    
+    def status_by_receptor(self, params=None):
+        return self._request('line/blocked', 'list', params)
