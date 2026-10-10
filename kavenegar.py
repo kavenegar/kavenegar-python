@@ -95,16 +95,20 @@ class KavenegarAPI(object):
                 timeout=self.timeout,
                 proxies=self.proxies,
             )
-            response.raise_for_status()  # Raises HTTPError for 4xx/5xx
-
+            # Kavenegar API errors also use non-2xx HTTP status codes.
             try:
                 json_response = response.json()
                 if (json_response['return']['status'] == 200):
+                    response.raise_for_status()
                     return json_response['entries']
                 else:
                     raise APIException('APIException[{}] {}'.format(json_response['return']['status'], json_response['return']['message']))
             except ValueError as e:
+                response.raise_for_status()
                 raise HTTPException(f"Invalid JSON response: {e}")
+            except (KeyError, TypeError):
+                response.raise_for_status()
+                raise HTTPException("Invalid API response")
         except requests.exceptions.RequestException as e:
             message = str(e).replace(self.apikey, self.apikey_mask)
             raise HTTPException(message) from None

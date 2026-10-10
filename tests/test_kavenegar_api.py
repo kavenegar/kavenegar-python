@@ -45,7 +45,7 @@ def mock_response(status=200, entries=None):
 ])
 def test_all_methods_success(mock_post, api, method_name, params):
     mocked = mock_response(status=200)
-    mock_post.return_value.__enter__.return_value = mocked
+    mock_post.return_value = mocked
 
     # Only pass params if not None
     if params is not None:
