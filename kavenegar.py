@@ -1,10 +1,5 @@
 import requests
-
-try:
-    import json
-except ImportError:
-    import simplejson as json
-
+import json
 
 # Default requests timeout in seconds.
 DEFAULT_TIMEOUT = 10
@@ -18,7 +13,7 @@ class HTTPException(Exception):
     pass
 
 
-class KavenegarAPI(object):
+class KavenegarAPI:
     """
     https://kavenegar.com/rest.html
     """
@@ -30,9 +25,9 @@ class KavenegarAPI(object):
         "charset": "utf-8",
     }
 
-    def __init__(self, apikey, timeout=None, proxies=None ,pool_connections=10, pool_maxsize=20, pool_block=True):
+    def __init__(self, apikey, timeout=None, proxies=None, pool_connections=10, pool_maxsize=20, pool_block=True):
         """
-        :param str apikey: Kavengera API Key
+        :param str apikey: Kavenegar API Key
         :param int timeout: request timeout, default is 10
         :param dict proxies: Dictionary mapping protocol to the URL of the proxy:
             {
@@ -55,23 +50,21 @@ class KavenegarAPI(object):
             pool_block=pool_block
         )
 
-
         self.session.mount('https://', adapter)
         self.session.headers.update(self.headers)
 
     def __repr__(self):
-        return "kavenegar.KavenegarAPI({!r})".format(self.apikey_mask)
+        return f"kavenegar.KavenegarAPI({self.apikey_mask!r})"
 
     def __str__(self):
-        return "kavenegar.KavenegarAPI({!s})".format(self.apikey_mask)
+        return f"kavenegar.KavenegarAPI({self.apikey_mask!s})"
 
     def close(self):
         """Close all pooled connections"""
         self.session.close()
-        
+
     def _pars_params_to_json(self, params):
-       
-        # Convert lists to JSON-like strings
+        """Convert lists and dicts to JSON-like strings"""
         formatted_params = {}
         for key, value in params.items():
             if isinstance(value, (dict, list, tuple)):
@@ -89,7 +82,7 @@ class KavenegarAPI(object):
         try:
             response = self.session.post(
                 url,
-                headers=self.headers,    
+                headers=self.headers,
                 auth=None,
                 data=params,
                 timeout=self.timeout,
@@ -99,15 +92,17 @@ class KavenegarAPI(object):
 
             try:
                 json_response = response.json()
-                if (json_response['return']['status'] == 200):
+                if json_response['return']['status'] == 200:
                     return json_response['entries']
                 else:
-                    raise APIException('APIException[{}] {}'.format(json_response['return']['status'], json_response['return']['message']))
-            except ValueError as e:
-                raise HTTPException(f"Invalid JSON response: {e}")
+                    raise APIException(
+                        f"APIException[{json_response['return']['status']}] {json_response['return']['message']}"
+                    )
+            except json.JSONDecodeError as e:
+                raise HTTPException(f"Invalid JSON response: {e}") from e
         except requests.exceptions.RequestException as e:
             message = str(e).replace(self.apikey, self.apikey_mask)
-            raise HTTPException(message) from None
+            raise HTTPException(message) from e
 
     def sms_send(self, params=None):
         return self._request('sms', 'send', params)

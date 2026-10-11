@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 from kavenegar import KavenegarAPI, APIException, HTTPException
 
+
 @pytest.fixture
 def api():
     return KavenegarAPI(apikey="1234567890abcdef")
@@ -40,12 +41,12 @@ def mock_response(status=200, entries=None):
     ("verify_lookup", {"receptor": "09120000000", "token": "1234", "template": "verify"}),
     ("call_maketts", {"receptor": "09120000000", "message": "Hello"}),
     ("call_status", {"messageid": 1}),
-    ("account_info", None),       # <-- no params
+    ("account_info", None),  # <-- no params
     ("account_config", {"timezone": "Asia/Tehran"})
 ])
 def test_all_methods_success(mock_post, api, method_name, params):
     mocked = mock_response(status=200)
-    mock_post.return_value.__enter__.return_value = mocked
+    mock_post.return_value = mocked
 
     # Only pass params if not None
     if params is not None:
@@ -78,7 +79,10 @@ def test_all_methods_api_exception(mock_post, api, method_name):
     mock_post.return_value = fake_response
 
     with pytest.raises(APIException):
-        getattr(api, method_name)()
+        if method_name in ("account_info",):
+            getattr(api, method_name)()
+        else:
+            getattr(api, method_name)({})
 
 
 # ------------------------
@@ -102,22 +106,16 @@ def test_all_methods_api_exception(mock_post, api, method_name):
     ("verify_lookup", {"receptor": "09120000000", "token": "1234", "template": "verify"}),
     ("call_maketts", {"receptor": "09120000000", "message": "Hello"}),
     ("call_status", {"messageid": 1}),
-    ("account_info", None),       # <-- no params
+    ("account_info", None),  # <-- no params
     ("account_config", {"timezone": "Asia/Tehran"})
 ])
-def test_all_methods_api_exception(mock_post, api, method_name, params):
-    fake_response = MagicMock()
-    fake_response.raise_for_status.return_value = None
-    fake_response.json.return_value = {
-        "return": {"status": 401, "message": "Invalid API key"},
-        "entries": []
-    }
-    mock_post.return_value = fake_response
+def test_all_methods_http_exception(mock_post, api, method_name, params):
+    mock_post.side_effect = Exception("Network error")
 
     # Only pass params if not None
     if params is not None:
-        with pytest.raises(APIException):
+        with pytest.raises(HTTPException):
             getattr(api, method_name)(params)
     else:
-        with pytest.raises(APIException):
+        with pytest.raises(HTTPException):
             getattr(api, method_name)()
